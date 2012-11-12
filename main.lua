@@ -53,6 +53,9 @@ function love.load()
 	chars[0] = {['x']=384,['y']=240,['z']=4,['xtile']=24,['ytile']=16,['ztile']=1,['xdest']=384,['ydest']=240,['zdest']=4,['xtarget']=nil,['ytarget']=nil,['ztarget']=nil,['facing']="s",['moving']=false,['speed']=35,['imagemap']=img,['image']=brown_guard['s'],['anim']=0,['animclock']=0.29}
 	table.insert(chars,{['x']=400,['y']=96,['z']=4,['xtile']=25,['ytile']=6,['ztile']=1,['xdest']=400,['ydest']=96,['zdest']=4,['xtarget']=nil,['ytarget']=nil,['ztarget']=nil,['facing']="s",['moving']=false,['speed']=35,['imagemap']=img,['image']=brown_guard['s'],['anim']=0,['animclock']=0.29,['movecheck_x']=nil,['movecheck_y']=nil}) -- This should eventually be loaded from a file.
 	table.insert(chars,{['x']=320,['y']=96,['z']=4,['xtile']=20,['ytile']=6,['ztile']=1,['xdest']=320,['ydest']=96,['zdest']=4,['xtarget']=nil,['ytarget']=nil,['ztarget']=nil,['facing']="s",['moving']=false,['speed']=35,['imagemap']=enemy,['image']=ghost['s'],['anim']=0,['animclock']=0.29,['movecheck_x']=nil,['movecheck_y']=nil}) -- This should eventually be loaded from a file.
+	-- The following is a temporary character for alpha testing --
+	table.insert(chars,{['x']=432,['y']=240,['z']=4,['xtile']=28,['ytile']=16,['ztile']=1,['xdest']=432,['ydest']=240,['zdest']=4,['xtarget']=nil,['ytarget']=nil,['ztarget']=nil,['facing']="s",['moving']=false,['speed']=35,['imagemap']=img,['image']=brown_guard['s'],['anim']=0,['animclock']=0.29,['movecheck_x']=nil,['movecheck_y']=nil}) -- This should eventually be loaded from a file.
+	-- end of temporary character --
 	activechars = {} -- This is the list of characters that could need to move.
 	
 	-- npc variables
@@ -232,15 +235,15 @@ function love.draw()
 		love.graphics.print("X Tile:",600,230)
 		love.graphics.print(chars[0]['xtile'],650,230)
 		love.graphics.print("Dest:",600,240)
-		love.graphics.print(map[nexttile(2718)][1]*tile_size,650,240)
+		love.graphics.print(map[nexttile(0)][1]*tile_size,650,240)
 		love.graphics.print("Y Tile:",600,250)
 		love.graphics.print(chars[0]['ytile'],650,250)
 		love.graphics.print("Dest:",600,260)
-		love.graphics.print(map[nexttile(2718)][2]*tile_size,650,260)
+		love.graphics.print(map[nexttile(0)][2]*tile_size,650,260)
 		love.graphics.print("Z Tile:",600,270)
 		love.graphics.print(chars[0]['ztile'],650,270)
 		love.graphics.print("Dest:",600,280)
-		love.graphics.print(map[nexttile(2718)][3],650,280)
+		love.graphics.print(map[nexttile(0)][3],650,280)
 		love.graphics.print("Moving:",600,320)
 		if chars[0]['moving'] == true then
 			love.graphics.print("True",650,320)
@@ -251,16 +254,17 @@ function love.draw()
 		love.graphics.print("Facing:",600,330)
 		love.graphics.print(chars[0]['facing'],650,330)
 		love.graphics.print("Next:",600,340)
-		checknext()
-		love.graphics.print(map[nexttile(2718)][1],650,340)
+		checknext(0)
+		love.graphics.print(map[nexttile(0)][1],650,340)
 		love.graphics.print(',',665,340)
-		love.graphics.print(map[nexttile(2718)][2],675,340)
+		love.graphics.print(map[nexttile(0)][2],675,340)
 	
 		-- start test area
 		love.graphics.print(xoffset .. ',' .. yoffset,625,355)
 		-- end test area
 		love.graphics.setColor(255,255,255)
 		love.graphics.draw(img, 200,400)
+		--love.graphics.drawq(enemy, ghost['e'], 200, 400, 0, 1, 1, 0)
 	end
 end
 
@@ -463,7 +467,7 @@ function love.update(dt)
 			chars[npc_move]['speed'] = 30
 		end
 		-- This section makes the npc move in a simple path --
-		if chars[npc_move]['ytile'] == 15 and npc_ai == 's' then
+		if chars[npc_move]['ytile'] == 17 and npc_ai == 's' then
 			npc_ai = "e"
 		end
 		if chars[npc_move]['xtile'] == 35 and npc_ai == 'e' then
