@@ -10,6 +10,7 @@ function love.load()
 	ter:setFilter("nearest", "linear")
 	tile_size = 16
 	tile1 = love.graphics.newQuad(52, 209, 16, 16, ter:getWidth(), ter:getHeight())
+	wall1 = love.graphics.newQuad(52, 205, 16, 4, ter:getWidth(), ter:getHeight())
 	tile2 = love.graphics.newQuad(52, 193, 16, 16, ter:getWidth(), ter:getHeight())
 	tile3 = love.graphics.newQuad(52, 177, 16, 16, ter:getWidth(), ter:getHeight())
 		load_map = {}--{{0,0,0,"0,0,0"}}
@@ -50,9 +51,12 @@ function love.load()
 	ghost = {['n'] = love.graphics.newQuad(28, 6, 16, 26, enemy:getWidth(), enemy:getHeight()),['nw1'] = love.graphics.newQuad(4, 6, 16, 26, enemy:getWidth(), enemy:getHeight()), ['nw2'] = love.graphics.newQuad(28, 6, 16, 26, enemy:getWidth(), enemy:getHeight()), ['nw3'] = love.graphics.newQuad(52, 6, 16, 26, enemy:getWidth(), enemy:getHeight()), ['nw4'] = love.graphics.newQuad(28, 6, 16, 26, enemy:getWidth(), enemy:getHeight()), ['s'] = love.graphics.newQuad(28, 70, 16, 26, enemy:getWidth(), enemy:getHeight()), ['sw1'] = love.graphics.newQuad(4, 70, 16, 26, enemy:getWidth(), enemy:getHeight()), ['sw2'] = love.graphics.newQuad(28, 70, 16, 26, enemy:getWidth(), enemy:getHeight()), ['sw3'] = love.graphics.newQuad(52, 70, 16, 26, enemy:getWidth(), enemy:getHeight()), ['sw4'] = love.graphics.newQuad(28, 70, 16, 26, enemy:getWidth(), enemy:getHeight()), ['w'] = love.graphics.newQuad(28, 102, 16, 26, enemy:getWidth(), enemy:getHeight()), ['ww1'] = love.graphics.newQuad(4, 102, 16, 26, enemy:getWidth(), enemy:getHeight()), ['ww2'] = love.graphics.newQuad(28, 102, 16, 26, enemy:getWidth(), enemy:getHeight()), ['ww3'] = love.graphics.newQuad(52, 102, 16, 26, enemy:getWidth(), enemy:getHeight()), ['ww4'] = love.graphics.newQuad(28, 102, 16, 26, enemy:getWidth(), enemy:getHeight()), ['e'] = love.graphics.newQuad(28, 38, 16, 26, enemy:getWidth(), enemy:getHeight()), ['ew1'] = love.graphics.newQuad(4, 38, 16, 26, enemy:getWidth(), enemy:getHeight()), ['ew2'] = love.graphics.newQuad(28, 38, 16, 26, enemy:getWidth(), enemy:getHeight()), ['ew3'] = love.graphics.newQuad(52, 38, 16, 26, enemy:getWidth(), enemy:getHeight()), ['ew4'] = love.graphics.newQuad(28, 38, 16, 26, enemy:getWidth(), enemy:getHeight())}
 	-- This creates the variables for the characters --
 	chars = {} -- This should replace mchar and npc
-	chars[0] = {['x']=384,['y']=240,['z']=4,['xtile']=24,['ytile']=16,['ztile']=1,['xdest']=384,['ydest']=240,['zdest']=4,['xtarget']=nil,['ytarget']=nil,['ztarget']=nil,['facing']="s",['moving']=false,['speed']=35,['imagemap']=img,['image']=brown_guard['s'],['anim']=0,['animclock']=0.29}
-	table.insert(chars,{['x']=400,['y']=96,['z']=4,['xtile']=25,['ytile']=6,['ztile']=1,['xdest']=400,['ydest']=96,['zdest']=4,['xtarget']=nil,['ytarget']=nil,['ztarget']=nil,['facing']="s",['moving']=false,['speed']=35,['imagemap']=img,['image']=brown_guard['s'],['anim']=0,['animclock']=0.29,['movecheck_x']=nil,['movecheck_y']=nil}) -- This should eventually be loaded from a file.
-	table.insert(chars,{['x']=320,['y']=96,['z']=4,['xtile']=20,['ytile']=6,['ztile']=1,['xdest']=320,['ydest']=96,['zdest']=4,['xtarget']=nil,['ytarget']=nil,['ztarget']=nil,['facing']="s",['moving']=false,['speed']=35,['imagemap']=enemy,['image']=ghost['s'],['anim']=0,['animclock']=0.29,['movecheck_x']=nil,['movecheck_y']=nil}) -- This should eventually be loaded from a file.
+	chars[0] = {['x']=384,['y']=240,['z']=4,['xtile']=24,['ytile']=16,['ztile']=1,['xdest']=384,['ydest']=240,['zdest']=4,['xtarget']=nil,['ytarget']=nil,['ztarget']=nil,['facing']="s",['moving']=false,['speed']=35,['imagemap']=img,['image']=brown_guard['s'],['anim']=0,['animclock']=0.29,['movecheck_x']=nil,['movecheck_y']=nil,['faction']=2,['inventindex']=nil,['equipped']=nil}
+		-- allies --
+	table.insert(chars,{['x']=400,['y']=96,['z']=4,['xtile']=25,['ytile']=6,['ztile']=1,['xdest']=400,['ydest']=96,['zdest']=4,['xtarget']=nil,['ytarget']=nil,['ztarget']=nil,['facing']="s",['moving']=false,['speed']=35,['imagemap']=img,['image']=brown_guard['s'],['anim']=0,['animclock']=0.29,['movecheck_x']=nil,['movecheck_y']=nil,['faction']=2,['inventindex']=nil,['equipped']=nil}) -- This should eventually be loaded from a file.	
+		-- enemies --
+	table.insert(chars,{['x']=320,['y']=96,['z']=4,['xtile']=20,['ytile']=6,['ztile']=1,['xdest']=320,['ydest']=96,['zdest']=4,['xtarget']=nil,['ytarget']=nil,['ztarget']=nil,['facing']="s",['moving']=false,['speed']=35,['imagemap']=enemy,['image']=ghost['s'],['anim']=0,['animclock']=0.29,['movecheck_x']=nil,['movecheck_y']=nil,['faction']=3,['inventindex']=nil,['equipped']=nil}) -- This should eventually be loaded from a file.
+	table.insert(chars,{['x']=432,['y']=96,['z']=4,['xtile']=27,['ytile']=6,['ztile']=1,['xdest']=432,['ydest']=96,['zdest']=4,['xtarget']=nil,['ytarget']=nil,['ztarget']=nil,['facing']="s",['moving']=false,['speed']=35,['imagemap']=enemy,['image']=ghost['s'],['anim']=0,['animclock']=0.29,['movecheck_x']=nil,['movecheck_y']=nil,['faction']=3,['inventindex']=nil,['equipped']=nil}) -- This should eventually be loaded from a file.
 	-- The following is a temporary character for alpha testing --
 	table.insert(chars,{['x']=432,['y']=240,['z']=4,['xtile']=28,['ytile']=16,['ztile']=1,['xdest']=432,['ydest']=240,['zdest']=4,['xtarget']=nil,['ytarget']=nil,['ztarget']=nil,['facing']="s",['moving']=false,['speed']=35,['imagemap']=img,['image']=brown_guard['s'],['anim']=0,['animclock']=0.29,['movecheck_x']=nil,['movecheck_y']=nil}) -- This should eventually be loaded from a file.
 	-- end of temporary character --
@@ -60,9 +64,7 @@ function love.load()
 	
 	-- npc variables
 	local npc_load = 1
-	local load_npc = "" -- replace this with something else in the future.
---	npc = {}
---	table.insert(npc,{['x']=400,['y']=96,['z']=4,['xtile']=25,['ytile']=6,['ztile']=1,['xdest']=400,['ydest']=96,['zdest']=4,['facing']="s",['moving']=false,['speed']=35,['image']=s_link,['anim']=0,['animclock']=0.29,['movecheck_x']=nil,['movecheck_y']=nil})
+	local load_npc = nil -- replace this with something else in the future.
 	while chars[npc_load] ~= nil do
 		chars[npc_load]['x'] = chars[npc_load]['xtile']*tile_size
 		chars[npc_load]['y'] = (chars[npc_load]['ytile']-1)*tile_size
@@ -75,7 +77,7 @@ function love.load()
 		npc_load = npc_load + 1
 	end
 	load_npc = chars[0]['xtile'] .. ',' .. chars[0]['ytile'] .. ',' .. chars[0]['ztile']
-	map[load_npc][6] = 2718
+	map[load_npc][6] = 0
 	
 	-- test variables
 	test_function = 1
@@ -86,7 +88,7 @@ function love.load()
 	xoffset = 0
 	yoffset = 0
 	zoffset = 0
-	passnext = 2718 -- This is used with the nexttile(passnext) function.
+	passnext = 0 -- This is used with the nexttile(passnext) function.
 	npc_ai = "s"
 	show_menu = false
 end
@@ -166,58 +168,31 @@ function love.draw()
 	--love.graphics.drawq(ter, tile1, 160, 160, 0, 1, 1, 0) -- This draws a background tile.
 	--local tile_num = 1
 	local ytile_num = 0
-	-- The following is testing drawing only a section around the character. --
-	local xdraw = chars[0]['xtile'] - 10
-	local ydraw = chars[0]['ytile'] - 10
-	local zdraw = 0
-	local xdrawend = chars[0]['xtile'] + 10
-	local ydrawend = chars[0]['ytile'] + 10
-	local zdrawend = 4
-	local xyz = "0,0,1" -- This variable is used to concotinate the numbers for lua to understand the draw variables run together. This value is overwritten.
+	local bubble = 10
+	local xdraw = chars[0]['xtile'] - bubble
+	local ydraw = chars[0]['ytile'] - bubble
+	local zdraw = chars[0]['ztile'] - bubble
+	local xdrawend = chars[0]['xtile'] + bubble
+	local ydrawend = chars[0]['ytile'] + bubble
+	local zdrawend = chars[0]['ztile'] + bubble -- This defines the ceiling 
+	local xyz = nil -- This variable is used to concotinate the numbers for lua to understand the draw variables run together. This value is overwritten.
 	while ydraw <= ydrawend do
 		while xdraw <= xdrawend do
 			while zdraw <= zdrawend do
 				xyz = xdraw .. ',' .. ydraw .. ',' .. zdraw
 				if map[xyz] ~= nil then
-					love.graphics.drawq(ter,tile1,map[xyz][1]*16-xoffset,map[xyz][2]*16-map[xyz][3]*4-yoffset+zoffset,0,1,1,0)
-					if map[xyz][6] ~= nil and map[xyz][6] ~= 2718 then
-						love.graphics.drawq(chars[map[xyz][6]]['imagemap'], chars[map[xyz][6]]['image'], chars[map[xyz][6]]['x']-xoffset, chars[map[xyz][6]]['y']-chars[map[xyz][6]]['z']-yoffset, 0, 1, 1, 0) -- This draws an npc.
-					end
-					if map[xyz][6] == 2718 then
-						love.graphics.drawq(img, chars[0]['image'], chars[0]['x'], chars[0]['y']-chars[0]['z'], 0, 1, 1, 0)
-					end
+					drawworld(xyz)
+					
 				end
 				zdraw = zdraw + 1
 			end
 			zdraw = 0
 			xdraw = xdraw + 1
 		end
-		xdraw = chars[0]['xtile'] - 10 -- if the xdraw - value is changed this will need to be made to be the same.
+		xdraw = chars[0]['xtile'] - bubble -- if the xdraw - value is changed this will need to be made to be the same.
 		ydraw = ydraw + 1
 	end
-	
-	-- The following is the original drawing section --
-	-- while load_map[tile_num] ~= nil do -- original draw for the map
-	--	while load_map[tile_num] ~= nil and load_map[tile_num][2] == ytile_num do
-	--		love.graphics.drawq(ter,load_map[tile_num][4],load_map[tile_num][1]*16-xoffset,load_map[tile_num][2]*16-load_map[tile_num][3]*4-yoffset,0,1,1,0)
-	--		tile_num = tile_num + 1
-	--	end
-	--	if chars[1]['ytile'] == ytile_num then
-	--		love.graphics.drawq(img, chars[1]['image'], chars[1]['x']-xoffset, chars[1]['y']-chars[1]['z']-yoffset, 0, 1, 1, 0) -- This draws an npc.
-	--	end
-	--	if chars[0]['ytile'] == ytile_num then
-	--		love.graphics.drawq(img, chars[0]['image'], chars[0]['x'], chars[0]['y']-chars[0]['z'], 0, 1, 1, 0) -- This draws the character right after the row is drawn.
-	--	end
-	--	if chars[0]['ytile'] + 1 == ytile_num and chars[0]['facing'] == 's' and chars[0]['moving'] then
-	--		love.graphics.drawq(img, chars[0]['image'], chars[0]['x'], chars[0]['y']-chars[0]['z'], 0, 1, 1, 0)  -- This draws the character right after the row the character is moving into is drawn.
-	--	end
-	--	ytile_num = ytile_num + 1
-	--end
-	
-	--while full_toggle == 1 do -- This will make it fullscreen.
-	--	love.graphics.toggleFullscreen()
-	--	full_toggle = 0
-	--end
+
 	love.graphics.setColor(50,50,50)
 	love.graphics.rectangle("fill",580,30,140,100)
 	love.graphics.setColor(menu_color[1],255,255)
@@ -229,43 +204,58 @@ function love.draw()
 	love.graphics.setColor(menu_color[4],255,255)
 	love.graphics.print("Exit",600,95)
 	if show_menu then
-		love.graphics.setColor(50,50,50)
-		love.graphics.rectangle("fill",580,210,140,160)
-		love.graphics.setColor(200,200,200)
-		love.graphics.print("X Tile:",600,230)
-		love.graphics.print(chars[0]['xtile'],650,230)
-		love.graphics.print("Dest:",600,240)
-		love.graphics.print(map[nexttile(0)][1]*tile_size,650,240)
-		love.graphics.print("Y Tile:",600,250)
-		love.graphics.print(chars[0]['ytile'],650,250)
-		love.graphics.print("Dest:",600,260)
-		love.graphics.print(map[nexttile(0)][2]*tile_size,650,260)
-		love.graphics.print("Z Tile:",600,270)
-		love.graphics.print(chars[0]['ztile'],650,270)
-		love.graphics.print("Dest:",600,280)
-		love.graphics.print(map[nexttile(0)][3],650,280)
-		love.graphics.print("Moving:",600,320)
-		if chars[0]['moving'] == true then
-			love.graphics.print("True",650,320)
-		end
-		if chars[0]['moving'] == false then
-			love.graphics.print("False",650,320)
-		end
-		love.graphics.print("Facing:",600,330)
-		love.graphics.print(chars[0]['facing'],650,330)
-		love.graphics.print("Next:",600,340)
-		checknext(0)
-		love.graphics.print(map[nexttile(0)][1],650,340)
-		love.graphics.print(',',665,340)
-		love.graphics.print(map[nexttile(0)][2],675,340)
-	
-		-- start test area
-		love.graphics.print(xoffset .. ',' .. yoffset,625,355)
-		-- end test area
-		love.graphics.setColor(255,255,255)
-		love.graphics.draw(img, 200,400)
-		--love.graphics.drawq(enemy, ghost['e'], 200, 400, 0, 1, 1, 0)
+		drawdebug()
 	end
+end
+
+function drawworld(xyz)
+	love.graphics.drawq(ter,tile1,map[xyz][1]*tile_size-xoffset,map[xyz][2]*tile_size-map[xyz][3]*4-yoffset+zoffset,0,1,1,0)
+	love.graphics.drawq(ter,wall1,map[xyz][1]*tile_size-xoffset,(map[xyz][2]+1)*tile_size-map[xyz][3]*4-yoffset+zoffset,0,1,1,0) -- This is for the vertical wall of the tile.
+	if map[xyz][6] ~= nil and map[xyz][6] ~= 0 then
+		love.graphics.drawq(chars[map[xyz][6]]['imagemap'], chars[map[xyz][6]]['image'], chars[map[xyz][6]]['x']-xoffset, chars[map[xyz][6]]['y']-chars[map[xyz][6]]['z']-yoffset, 0, 1, 1, 0) -- This draws an npc.
+	end
+	if map[xyz][6] == 0 then
+		love.graphics.drawq(img, chars[0]['image'], chars[0]['x'], chars[0]['y']-chars[0]['z'], 0, 1, 1, 0)
+	end
+end
+
+function drawdebug() -- This function displays hopefully useful information for debugging
+	love.graphics.setColor(50,50,50)
+	love.graphics.rectangle("fill",580,210,140,160)
+	love.graphics.setColor(200,200,200)
+	love.graphics.print("X Tile:",600,230)
+	love.graphics.print(chars[0]['xtile'],650,230)
+	love.graphics.print("Dest:",600,240)
+	love.graphics.print(map[nexttile(0)][1]*tile_size,650,240)
+	love.graphics.print("Y Tile:",600,250)
+	love.graphics.print(chars[0]['ytile'],650,250)
+	love.graphics.print("Dest:",600,260)
+	love.graphics.print(map[nexttile(0)][2]*tile_size,650,260)
+	love.graphics.print("Z Tile:",600,270)
+	love.graphics.print(chars[0]['ztile'],650,270)
+	love.graphics.print("Dest:",600,280)
+	love.graphics.print(map[nexttile(0)][3],650,280)
+	love.graphics.print("Moving:",600,320)
+	if chars[0]['moving'] == true then
+		love.graphics.print("True",650,320)
+	end
+	if chars[0]['moving'] == false then
+		love.graphics.print("False",650,320)
+	end
+	love.graphics.print("Facing:",600,330)
+	love.graphics.print(chars[0]['facing'],650,330)
+	love.graphics.print("Next:",600,340)
+	checknext(0)
+	love.graphics.print(map[nexttile(0)][1],650,340)
+	love.graphics.print(',',665,340)
+	love.graphics.print(map[nexttile(0)][2],675,340)
+	
+	-- start test area
+	love.graphics.print(xoffset .. ',' .. yoffset,625,355)
+	-- end test area
+	love.graphics.setColor(255,255,255)
+	love.graphics.draw(img, 200,400)
+	--love.graphics.drawq(enemy, ghost['e'], 200, 400, 0, 1, 1, 0)
 end
 
 dtotal = 0   -- this keeps track of how much time has passed
@@ -273,50 +263,26 @@ function love.update(dt)
 	--dt = math.min(dt, 1/60) -- this limits the frame rate if needed
 	local movecheck_x = xoffset
 	local movecheck_y = yoffset
---	local npccheck_x = 0 -- this is a place holder
---	local npccheck_y = 0 -- this is a place holder
 	local tilecheck_x = chars[0]['xtile']
 	local tilecheck_y = chars[0]['ytile']
 	local xyz = nil
 	-- movement of character --
-	-- keyboard movement --
+		-- keyboard movement --
 	if love.keyboard.isDown('w') and (chars[0]['facing'] == "n" or not chars[0]['moving']) then
 		chars[0]['facing'] = "n"
-		if checknext(2718) then
-			chars[0]['ydest'] = (map[nexttile(2718)][2]-1)*tile_size
-			chars[0]['zdest'] = map[nexttile(2718)][3]*4
-			chars[0]['moving'] = true
-		end
+		startmove(0)
 	end
 	if love.keyboard.isDown('s') and (chars[0]['facing'] == "s" or not chars[0]['moving']) then
 		chars[0]['facing'] = "s"
-		if checknext(2718) then
-			xyz = chars[0]['xtile'] .. ',' .. chars[0]['ytile'] .. ',' .. chars[0]['ztile'] -- This finds the current tile and removes the marker for the character.
-			map[xyz][6] = nil
-			chars[0]['ydest'] = (map[nexttile(2718)][2]-1)*tile_size
-			chars[0]['zdest'] = map[nexttile(2718)][3]*4
-			chars[0]['moving'] = true
-			map[nexttile(2718)][6] = 2718
-		end
+		startmove(0)
 	end
 	if love.keyboard.isDown('a') and (chars[0]['facing'] == "w" or not chars[0]['moving']) then
 		chars[0]['facing'] = "w"
-		if checknext(2718) then
-			chars[0]['xdest'] = map[nexttile(2718)][1]*tile_size
-			chars[0]['zdest'] = map[nexttile(2718)][3]*4
-			chars[0]['moving'] = true
-		end
+		startmove(0)
 	end
 	if love.keyboard.isDown('d') and (chars[0]['facing'] == "e" or not chars[0]['moving']) then
 		chars[0]['facing'] = "e"
-		if checknext(2718) then
-			xyz = chars[0]['xtile'] .. ',' .. chars[0]['ytile'] .. ',' .. chars[0]['ztile'] -- This finds the current tile and removes the marker for the character.
-			map[xyz][6] = nil
-			chars[0]['xdest'] = map[nexttile(2718)][1]*tile_size
-			chars[0]['zdest'] = map[nexttile(2718)][3]*4
-			chars[0]['moving'] = true
-			map[nexttile(2718)][6] = 2718
-		end
+		startmove(0)
 	end
 	if love.keyboard.isDown('lshift') then
 		chars[0]['speed'] = 70 -- 70 appears to be too fast, though I do not know why. The character occasionally gets stuck moving right or down.
@@ -353,11 +319,11 @@ function love.update(dt)
 		anim_num = chars[0]['facing'] .. 'w' .. chars[0]['anim']
 		chars[0]['image'] = brown_guard[anim_num]
 	end
-	if math.floor(chars[0]['x']+0.9+xoffset) == map[nexttile(2718)][1]*tile_size and math.floor(chars[0]['y']+0.9+yoffset) == (map[nexttile(2718)][2]-1)*tile_size then -- The +0.9 is too make the character not get stuck when moving quickly (speed > 40).
+	if math.floor(chars[0]['x']+0.9+xoffset) == map[nexttile(0)][1]*tile_size and math.floor(chars[0]['y']+0.9+yoffset) == (map[nexttile(0)][2]-1)*tile_size then -- The +0.9 is too make the character not get stuck when moving quickly (speed > 40).
 		xyz = chars[0]['xtile'] .. ',' .. chars[0]['ytile'] .. ',' .. chars[0]['ztile'] -- This finds the current tile and removes the marker for the character.
 		map[xyz][6] = nil
-		map[nexttile(2718)][6] = 2718
-		chars[0]['ztile'] = map[nexttile(2718)][3]
+		map[nexttile(0)][6] = 0
+		chars[0]['ztile'] = map[nexttile(0)][3]
 		chars[0]['xtile'] = get_next_x
 		chars[0]['ytile'] = get_next_y
 	end
@@ -374,46 +340,24 @@ function love.update(dt)
 	-- npc movement --
 	-- auto movement --
 	local npc_move = 1
-	while npc_move <= 2 do
+	while npc_move <= 3 do
 	chars[npc_move]['movecheck_x'] = chars[npc_move]['x']
 	chars[npc_move]['movecheck_y'] = chars[npc_move]['y']
 		if npc_ai == 'n' and (chars[npc_move]['facing'] == "n" or not chars[npc_move]['moving']) then
 			chars[npc_move]['facing'] = "n"
-			if checknext(npc_move) then
-				chars[npc_move]['ydest'] = (map[nexttile(npc_move)][2]-1)*tile_size
-				chars[npc_move]['zdest'] = map[nexttile(npc_move)][3]*4
-				chars[npc_move]['moving'] = true
-			end
+			startmove(npc_move)
 		end
 		if npc_ai == 's' and (chars[npc_move]['facing'] == "s" or not chars[npc_move]['moving']) then
 			chars[npc_move]['facing'] = "s"
-			if checknext(npc_move) then
-				xyz = chars[npc_move]['xtile'] .. ',' .. chars[npc_move]['ytile'] .. ',' .. chars[npc_move]['ztile'] -- This finds the current tile and removes the marker for the character.
-				map[xyz][6] = nil
-				chars[npc_move]['ydest'] = (map[nexttile(npc_move)][2]-1)*tile_size
-				chars[npc_move]['zdest'] = map[nexttile(npc_move)][3]*4
-				chars[npc_move]['moving'] = true
-				map[nexttile(npc_move)][6] = npc_move
-			end
+			startmove(npc_move)
 		end
 		if npc_ai == 'w' and (chars[npc_move]['facing'] == "w" or not chars[npc_move]['moving']) then
 			chars[npc_move]['facing'] = "w"
-			if checknext(npc_move) then
-				chars[npc_move]['xdest'] = map[nexttile(npc_move)][1]*tile_size
-				chars[npc_move]['zdest'] = map[nexttile(npc_move)][3]*4
-				chars[npc_move]['moving'] = true
-			end
+			startmove(npc_move)
 		end
 		if npc_ai == 'e' and (chars[npc_move]['facing'] == "e" or not chars[npc_move]['moving']) then
 			chars[npc_move]['facing'] = "e"
-			if checknext(npc_move) then
-				xyz = chars[npc_move]['xtile'] .. ',' .. chars[npc_move]['ytile'] .. ',' .. chars[npc_move]['ztile'] -- This finds the current tile and removes the marker for the character.
-				map[xyz][6] = nil
-				chars[npc_move]['xdest'] = map[nexttile(npc_move)][1]*tile_size
-				chars[npc_move]['zdest'] = map[nexttile(npc_move)][3]*4
-				chars[npc_move]['moving'] = true
-				map[nexttile(npc_move)][6] = 1
-			end
+			startmove(npc_move)
 		end
 		-- npc running --
 		if love.keyboard.isDown('rshift') then -- temporary: right shift makes npc[1] run
@@ -482,12 +426,23 @@ function love.update(dt)
 		-- end of ai section --
 	npc_move = npc_move + 1
 	end
-	
 
-	-- testing running toggle
 	chars[0]['speed'] = 30 -- This makes it so running is only active when the key is down.
 end
 
+function startmove(npc)
+	if checknext(npc) then
+		local xyz = chars[npc]['xtile'] .. ',' .. chars[npc]['ytile'] .. ',' .. chars[npc]['ztile'] -- This finds the current tile and removes the marker for the character.
+		chars[npc]['xdest'] = map[nexttile(npc)][1]*tile_size
+		chars[npc]['ydest'] = (map[nexttile(npc)][2]-1)*tile_size
+		chars[npc]['zdest'] = map[nexttile(npc)][3]*tile_size/4
+		chars[npc]['moving'] = true
+		if chars[npc]['facing'] == 's' or chars[npc]['facing'] == 'e' then -- This draws them ahead, in the direction that gets drawn next. Going the other two directions isn't a problem.
+			map[nexttile(npc)][6] = npc
+			map[xyz][6] = nil
+		end
+	end
+end
 
 function love.keypressed(key, unicode)
 	if key == 'escape' then
@@ -504,9 +459,10 @@ function love.keypressed(key, unicode)
 		menu(key)
 	end
 	if key == 'f' then -- This is to modify the terrain.
-		load_map[map[nexttile(0)][5]][3] = load_map[map[nexttile(0)][5]][3] + 1 -- increase z in load_map
-		map[load_map[map[nexttile(0)][5]][1] .. ',' .. load_map[map[nexttile(0)][5]][2] .. ',' .. load_map[map[nexttile(0)][5]][3]] = {load_map[map[nexttile(0)][5]][1], load_map[map[nexttile(0)][5]][2], load_map[map[nexttile(0)][5]][3], load_map[map[nexttile(0)][5]][4], map[nexttile(0)][5]} -- create the new map
-		map[nexttile(0)] = nil -- erase the old map tile
+		addtile(0)
+		--load_map[map[nexttile(0)][5]][3] = load_map[map[nexttile(0)][5]][3] + 1 -- increase z in load_map
+		--map[nexttile(0)] = {load_map[map[nexttile(0)][5]][1], load_map[map[nexttile(0)][5]][2], load_map[map[nexttile(0)][5]][3], load_map[map[nexttile(0)][5]][4], map[nexttile(0)][5]} -- create the new map
+		--map[nexttile(0)] = nil -- erase the old map tile
 	end
 	if key == '`' then -- This is to show the extra attributes
 		if show_menu == false then
@@ -569,12 +525,11 @@ function save_map()
 end
 
 function nexttile(passnext)
-	if passnext == 2718 then
+	if passnext == 0 then
 		passnext = 0
 	end
 		get_next_x = chars[passnext]['xtile']
 		get_next_y = chars[passnext]['ytile']
-		local i = 0
 		if chars[passnext]['facing'] == 'n' then
 			get_next_y = get_next_y - 1
 		elseif chars[passnext]['facing'] == 's' then
@@ -584,15 +539,41 @@ function nexttile(passnext)
 		elseif chars[passnext]['facing'] == 'e' then
 			get_next_x = get_next_x + 1
 		end
+		local i = chars[passnext]['ztile'] + 6
 		local xy = get_next_x .. ',' .. get_next_y .. ',' -- This needs to be after modifying the get_next variables.
-		while map[xy .. i] == nil and i <= 10 do
-			i = i + 1
+		while map[xy .. i] == nil and i >= 0 do
+			i = i - 1
 		end
 		return xy .. i
 end
 
+function addtile(passnext)
+	get_next_x = chars[passnext]['xtile']
+	get_next_y = chars[passnext]['ytile']
+	if chars[passnext]['facing'] == 'n' then
+		get_next_y = get_next_y - 1
+	elseif chars[passnext]['facing'] == 's' then
+		get_next_y = get_next_y + 1
+	elseif chars[passnext]['facing'] == 'w' then
+		get_next_x = get_next_x - 1
+	elseif chars[passnext]['facing'] == 'e' then
+		get_next_x = get_next_x + 1
+	end
+	local i = chars[passnext]['ztile'] + 6
+	local xy = get_next_x .. ',' .. get_next_y .. ',' -- This needs to be after modifying the get_next variables.
+	while map[xy .. i] == nil and i >= 0 do
+		i = i - 1
+	end
+	i = i + 1
+	local xyz
+	xyz = xy .. i
+	map[xyz] = {map[nexttile(passnext)][1], map[nexttile(passnext)][2], map[nexttile(passnext)][3]+1, map[nexttile(passnext)][4], loadxyz, nil} -- This may not be correct.
+	table.insert(load_map,{map[nexttile(passnext)][1],map[nexttile(passnext)][2],map[nexttile(passnext)][3]+1,map[nexttile(passnext)][4],xyz}) -- This may not be correct.
+	loadxyz = loadxyz + 1
+end
+
 function checknext(passnext) -- This returns the difference in height between the main characters current position and its next position.
-	if passnext == 2718 then
+	if passnext == 0 then
 		passnext = 0
 	end
 	if chars[passnext]['ztile'] - map[nexttile(passnext)][3] >= -2 and chars[passnext]['ztile'] - map[nexttile(passnext)][3] <= 3 and map[nexttile(passnext)][6] == nil then -- It is possible to go up 2 steps and down 3 steps.
