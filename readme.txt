@@ -1,1 +1,1 @@
-Test readme
+Awake is a tower defense game with modifyable terrain.

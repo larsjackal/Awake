@@ -51,33 +51,37 @@ function love.load()
 	ghost = {['n'] = love.graphics.newQuad(28, 6, 16, 26, enemy:getWidth(), enemy:getHeight()),['nw1'] = love.graphics.newQuad(4, 6, 16, 26, enemy:getWidth(), enemy:getHeight()), ['nw2'] = love.graphics.newQuad(28, 6, 16, 26, enemy:getWidth(), enemy:getHeight()), ['nw3'] = love.graphics.newQuad(52, 6, 16, 26, enemy:getWidth(), enemy:getHeight()), ['nw4'] = love.graphics.newQuad(28, 6, 16, 26, enemy:getWidth(), enemy:getHeight()), ['s'] = love.graphics.newQuad(28, 70, 16, 26, enemy:getWidth(), enemy:getHeight()), ['sw1'] = love.graphics.newQuad(4, 70, 16, 26, enemy:getWidth(), enemy:getHeight()), ['sw2'] = love.graphics.newQuad(28, 70, 16, 26, enemy:getWidth(), enemy:getHeight()), ['sw3'] = love.graphics.newQuad(52, 70, 16, 26, enemy:getWidth(), enemy:getHeight()), ['sw4'] = love.graphics.newQuad(28, 70, 16, 26, enemy:getWidth(), enemy:getHeight()), ['w'] = love.graphics.newQuad(28, 102, 16, 26, enemy:getWidth(), enemy:getHeight()), ['ww1'] = love.graphics.newQuad(4, 102, 16, 26, enemy:getWidth(), enemy:getHeight()), ['ww2'] = love.graphics.newQuad(28, 102, 16, 26, enemy:getWidth(), enemy:getHeight()), ['ww3'] = love.graphics.newQuad(52, 102, 16, 26, enemy:getWidth(), enemy:getHeight()), ['ww4'] = love.graphics.newQuad(28, 102, 16, 26, enemy:getWidth(), enemy:getHeight()), ['e'] = love.graphics.newQuad(28, 38, 16, 26, enemy:getWidth(), enemy:getHeight()), ['ew1'] = love.graphics.newQuad(4, 38, 16, 26, enemy:getWidth(), enemy:getHeight()), ['ew2'] = love.graphics.newQuad(28, 38, 16, 26, enemy:getWidth(), enemy:getHeight()), ['ew3'] = love.graphics.newQuad(52, 38, 16, 26, enemy:getWidth(), enemy:getHeight()), ['ew4'] = love.graphics.newQuad(28, 38, 16, 26, enemy:getWidth(), enemy:getHeight())}
 	-- This creates the variables for the characters --
 	chars = {} -- This should replace mchar and npc
-	chars[0] = {['x']=384,['y']=240,['z']=4,['xtile']=24,['ytile']=16,['ztile']=1,['xdest']=384,['ydest']=240,['zdest']=4,['xtarget']=nil,['ytarget']=nil,['ztarget']=nil,['facing']="s",['moving']=false,['speed']=35,['imagemap']=img,['image']=brown_guard['s'],['anim']=0,['animclock']=0.29,['movecheck_x']=nil,['movecheck_y']=nil,['faction']=2,['inventindex']=nil,['equipped']=nil}
+	chars[0] = {['x']=384,['y']=240,['z']=4,['xtile']=24,['ytile']=16,['ztile']=1,['xdest']=384,['ydest']=240,['zdest']=4,['xtarget']=nil,['ytarget']=nil,['ztarget']=nil,['facing']="s",['moving']=false,['speed']=35,['imagemap']=img,['image']=brown_guard['s'],['anim']=0,['animclock']=0.29,['movecheck_x']=nil,['movecheck_y']=nil,['faction']="home",['inventindex']=nil,['equipped']=nil}
+	load_npc = 1
 		-- allies --
-	table.insert(chars,{['x']=400,['y']=96,['z']=4,['xtile']=25,['ytile']=6,['ztile']=1,['xdest']=400,['ydest']=96,['zdest']=4,['xtarget']=nil,['ytarget']=nil,['ztarget']=nil,['facing']="s",['moving']=false,['speed']=35,['imagemap']=img,['image']=brown_guard['s'],['anim']=0,['animclock']=0.29,['movecheck_x']=nil,['movecheck_y']=nil,['faction']=2,['inventindex']=nil,['equipped']=nil}) -- This should eventually be loaded from a file.	
+	createnpc(25,7,1,'s',img,brown_guard['s'],"home")
 		-- enemies --
-	table.insert(chars,{['x']=320,['y']=96,['z']=4,['xtile']=20,['ytile']=6,['ztile']=1,['xdest']=320,['ydest']=96,['zdest']=4,['xtarget']=nil,['ytarget']=nil,['ztarget']=nil,['facing']="s",['moving']=false,['speed']=35,['imagemap']=enemy,['image']=ghost['s'],['anim']=0,['animclock']=0.29,['movecheck_x']=nil,['movecheck_y']=nil,['faction']=3,['inventindex']=nil,['equipped']=nil}) -- This should eventually be loaded from a file.
-	table.insert(chars,{['x']=432,['y']=96,['z']=4,['xtile']=27,['ytile']=6,['ztile']=1,['xdest']=432,['ydest']=96,['zdest']=4,['xtarget']=nil,['ytarget']=nil,['ztarget']=nil,['facing']="s",['moving']=false,['speed']=35,['imagemap']=enemy,['image']=ghost['s'],['anim']=0,['animclock']=0.29,['movecheck_x']=nil,['movecheck_y']=nil,['faction']=3,['inventindex']=nil,['equipped']=nil}) -- This should eventually be loaded from a file.
+	createnpc(20,6,1,'s',enemy,ghost['s'],"undead")
+	createnpc(27,6,1,'s',enemy,ghost['s'],"undead")
 	-- The following is a temporary character for alpha testing --
-	table.insert(chars,{['x']=432,['y']=240,['z']=4,['xtile']=28,['ytile']=16,['ztile']=1,['xdest']=432,['ydest']=240,['zdest']=4,['xtarget']=nil,['ytarget']=nil,['ztarget']=nil,['facing']="s",['moving']=false,['speed']=35,['imagemap']=img,['image']=brown_guard['s'],['anim']=0,['animclock']=0.29,['movecheck_x']=nil,['movecheck_y']=nil}) -- This should eventually be loaded from a file.
+	createnpc(28,16,1,'s',img,brown_guard['s'],"home")
+
 	-- end of temporary character --
 	activechars = {} -- This is the list of characters that could need to move.
 	
 	-- npc variables
-	local npc_load = 1
-	local load_npc = nil -- replace this with something else in the future.
-	while chars[npc_load] ~= nil do
-		chars[npc_load]['x'] = chars[npc_load]['xtile']*tile_size
-		chars[npc_load]['y'] = (chars[npc_load]['ytile']-1)*tile_size
-		chars[npc_load]['z'] = chars[npc_load]['ztile']*tile_size/4
-		chars[npc_load]['xtarget'] = chars[npc_load]['x']
-		chars[npc_load]['ytarget'] = chars[npc_load]['y']
-		chars[npc_load]['ztarget'] = chars[npc_load]['z']
-		load_npc = chars[npc_load]['xtile'] .. ',' .. chars[npc_load]['ytile'] .. ',' .. chars[npc_load]['ztile']
-		map[load_npc][6] = npc_load
-		npc_load = npc_load + 1
-	end
-	load_npc = chars[0]['xtile'] .. ',' .. chars[0]['ytile'] .. ',' .. chars[0]['ztile']
-	map[load_npc][6] = 0
+	local xyz
+--	local load_npc = nil -- replace this with something else in the future.
+--	while chars[load_npc] ~= nil do
+--		chars[load_npc]['x'] = chars[load_npc]['xtile']*tile_size
+--		chars[load_npc]['y'] = (chars[load_npc]['ytile']-1)*tile_size
+--		chars[load_npc]['z'] = chars[load_npc]['ztile']*tile_size/4
+--		chars[load_npc]['xtarget'] = chars[load_npc]['x']
+--		chars[load_npc]['ytarget'] = chars[load_npc]['y']
+--		chars[load_npc]['ztarget'] = chars[load_npc]['z']
+--		load_npc = chars[load_npc]['xtile'] .. ',' .. chars[load_npc]['ytile'] .. ',' .. chars[load_npc]['ztile']
+--		map[load_npc][6] = load_npc
+--		load_npc = load_npc + 1
+--	end
+
+
+	xyz = chars[0]['xtile'] .. ',' .. chars[0]['ytile'] .. ',' .. chars[0]['ztile']
+	map[xyz][6] = 0
 	
 	-- test variables
 	test_function = 1
@@ -212,6 +216,7 @@ function drawworld(xyz)
 	love.graphics.drawq(ter,tile1,map[xyz][1]*tile_size-xoffset,map[xyz][2]*tile_size-map[xyz][3]*4-yoffset+zoffset,0,1,1,0)
 	love.graphics.drawq(ter,wall1,map[xyz][1]*tile_size-xoffset,(map[xyz][2]+1)*tile_size-map[xyz][3]*4-yoffset+zoffset,0,1,1,0) -- This is for the vertical wall of the tile.
 	if map[xyz][6] ~= nil and map[xyz][6] ~= 0 then
+		print(map[xyz][6])
 		love.graphics.drawq(chars[map[xyz][6]]['imagemap'], chars[map[xyz][6]]['image'], chars[map[xyz][6]]['x']-xoffset, chars[map[xyz][6]]['y']-chars[map[xyz][6]]['z']-yoffset, 0, 1, 1, 0) -- This draws an npc.
 	end
 	if map[xyz][6] == 0 then
@@ -341,28 +346,29 @@ function love.update(dt)
 	-- auto movement --
 	local npc_move = 1
 	while npc_move <= 3 do
+	ai(npc_move)
 	chars[npc_move]['movecheck_x'] = chars[npc_move]['x']
 	chars[npc_move]['movecheck_y'] = chars[npc_move]['y']
-		if npc_ai == 'n' and (chars[npc_move]['facing'] == "n" or not chars[npc_move]['moving']) then
+		if chars[npc_move]['action'] == "walkn" and (chars[npc_move]['facing'] == "n" or not chars[npc_move]['moving']) then
 			chars[npc_move]['facing'] = "n"
 			startmove(npc_move)
 		end
-		if npc_ai == 's' and (chars[npc_move]['facing'] == "s" or not chars[npc_move]['moving']) then
+		if chars[npc_move]['action'] == "walks" and (chars[npc_move]['facing'] == "s" or not chars[npc_move]['moving']) then
 			chars[npc_move]['facing'] = "s"
 			startmove(npc_move)
 		end
-		if npc_ai == 'w' and (chars[npc_move]['facing'] == "w" or not chars[npc_move]['moving']) then
+		if chars[npc_move]['action'] == "walkw" and (chars[npc_move]['facing'] == "w" or not chars[npc_move]['moving']) then
 			chars[npc_move]['facing'] = "w"
 			startmove(npc_move)
 		end
-		if npc_ai == 'e' and (chars[npc_move]['facing'] == "e" or not chars[npc_move]['moving']) then
+		if chars[npc_move]['action'] == "walke" and (chars[npc_move]['facing'] == "e" or not chars[npc_move]['moving']) then
 			chars[npc_move]['facing'] = "e"
 			startmove(npc_move)
 		end
 		-- npc running --
-		if love.keyboard.isDown('rshift') then -- temporary: right shift makes npc[1] run
-			chars[npc_move]['speed'] = 70 -- 70 appears to be too fast, though I do not know why. The character occasionally gets stuck moving right or down.
-		end
+--		if love.keyboard.isDown('rshift') then -- temporary: right shift makes npc[1] run
+--			chars[npc_move]['speed'] = 70 -- 70 appears to be too fast, though I do not know why. The character occasionally gets stuck moving right or down.
+--		end
 
 		if chars[npc_move]['x'] < chars[npc_move]['xdest'] then
 			chars[npc_move]['x'] = chars[npc_move]['x'] + chars[npc_move]['speed']*dt
@@ -410,20 +416,6 @@ function love.update(dt)
 			chars[npc_move]['image'] = brown_guard[chars[npc_move]['facing']] -- sets the character to the stationary image for its facing
 			chars[npc_move]['speed'] = 30
 		end
-		-- This section makes the npc move in a simple path --
-		if chars[npc_move]['ytile'] == 17 and npc_ai == 's' then
-			npc_ai = "e"
-		end
-		if chars[npc_move]['xtile'] == 35 and npc_ai == 'e' then
-			npc_ai = "n"
-		end
-		if chars[npc_move]['ytile'] == 10 and npc_ai == 'n' then
-			npc_ai = "w"
-		end
-		if chars[npc_move]['xtile'] == 25 and npc_ai == 'w' then
-			npc_ai = "s"
-		end
-		-- end of ai section --
 	npc_move = npc_move + 1
 	end
 
@@ -441,6 +433,39 @@ function startmove(npc)
 			map[nexttile(npc)][6] = npc
 			map[xyz][6] = nil
 		end
+	end
+end
+
+function ai(npc)
+	chars[npc]['action'] = "stationary"
+	local xdiff = nil
+	local ydiff = nil
+	xdiff = chars[npc]['xtile'] - chars[determinetarget(npc)]['xtile']
+	ydiff = chars[npc]['ytile'] - chars[determinetarget(npc)]['ytile']
+	if math.abs(ydiff) >= math.abs(xdiff) then
+		if 0 > ydiff then
+			chars[npc]['action'] = "walks"
+		end
+		if 0 < ydiff then
+			chars[npc]['action'] = "walkn"
+		end
+	else --if math.abs(ydiff) <= math.abs(xdiff) then
+		if 0 > xdiff then
+			chars[npc]['action'] = "walke"
+		end
+		if 0 < xdiff then
+			chars[npc]['action'] = "walkw"
+		end
+	end
+end
+
+function determinetarget(npc)
+	-- This will determine the target for the NPC. Currently, it just sets them to targetting npc 4.
+	if chars[npc]['faction'] == "undead" then
+		return 4
+	end
+	if chars[npc]['faction'] == "home" then
+		return 3
 	end
 end
 
@@ -581,6 +606,54 @@ function checknext(passnext) -- This returns the difference in height between th
 	else
 		return false
 	end
+end
+
+function createnpc(xtile,ytile,ztile,facing,imagemap,image,faction)
+---- Character stats ----
+--['x']=320					x coordinate position -- calculate from xtile
+--['y']=96					y coordinate position -- calculate from ytile
+--['z']=4					z coordinate position -- calculate from ztile
+--['xtile']=20				The character is on this x tile
+--['ytile']=6				The character is on this y tile
+--['ztile']=1				The character is on this z tile
+--['xdest']=320				The x coordinate destination -- at start is equal to x
+--['ydest']=96				The y coordinate destination -- at start is equal to y
+--['zdest']=4				The z coordinate destination -- at start is equal to z
+--['xtarget']=nil			-- still used?
+--['ytarget']=nil			-- still used?
+--['ztarget']=nil			-- still used?
+--['facing']="s"			The facing of the character
+--['moving']=false			Is the character moving
+--['speed']=35				The speed of the character
+--['imagemap']=enemy		This is the large image the sprites are taken from
+--['image']=ghost['s']		Current sprite image
+--['anim']=0				The animation counter
+--['animclock']=0.29		The animation clock
+--['movecheck_x']=nil		This is used to check if the character moved in the x direction
+--['movecheck_y']=nil		This is used to check if the character moved in the x direction		
+--['faction']="undead"		The character's faction
+--['inventindex']=nil		This is the index value for the character's inventory
+--['equipped']=nil			This is the index velue for the item the character has equipped from their inventory
+--['goal']=nil				This is the ai's goal/objective
+--['action']=nil			This is the action the ai is taking towards the goal
+	table.insert(chars,{['x']=nil,['y']=nil,['z']=nil,['xtile']=xtile,['ytile']=ytile,['ztile']=ztile,['facing']=facing,['moving']=false,['speed']=35,['imagemap']=imagemap,['image']=image,['anim']=0,['animclock']=0.29,['movecheck_x']=nil,['movecheck_y']=nil,['faction']="undead",['inventindex']=nil,['equipped']=nil,['goal']=nil,['action']=nil}) -- This should eventually be loaded from a file.
+
+
+--	table.insert(chars,{['x']=400,['y']=96,['z']=4,['xtile']=25,['ytile']=6,['ztile']=1,['xdest']=400,['ydest']=96,['zdest']=4,['xtarget']=nil,['ytarget']=nil,['ztarget']=nil,['facing']="s",['moving']=false,['speed']=35,['imagemap']=img,['image']=brown_guard['s'],['anim']=0,['animclock']=0.29,['movecheck_x']=nil,['movecheck_y']=nil,['faction']="home",['inventindex']=nil,['equipped']=nil,['goal']=nil,['action']=nil})
+	
+	chars[load_npc]['x'] = chars[load_npc]['xtile']*tile_size
+	chars[load_npc]['y'] = (chars[load_npc]['ytile']-1)*tile_size
+	chars[load_npc]['z'] = chars[load_npc]['ztile']*tile_size/4
+	chars[load_npc]['xdest'] = chars[load_npc]['x']
+	chars[load_npc]['ydest'] = chars[load_npc]['y']
+	chars[load_npc]['zdest'] = chars[load_npc]['z']
+	chars[load_npc]['xtarget'] = chars[load_npc]['x']
+	chars[load_npc]['ytarget'] = chars[load_npc]['y']
+	chars[load_npc]['ztarget'] = chars[load_npc]['z']
+	local xyz = nil
+	xyz = chars[load_npc]['xtile'] .. ',' .. chars[load_npc]['ytile'] .. ',' .. chars[load_npc]['ztile']
+	map[xyz][6] = load_npc
+	load_npc = load_npc + 1
 end
 
 --	Unused functions
