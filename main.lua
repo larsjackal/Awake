@@ -171,6 +171,8 @@ end
 function love.draw()
 	--love.graphics.drawq(ter, tile1, 160, 160, 0, 1, 1, 0) -- This draws a background tile.
 	--local tile_num = 1
+	activechars = nil -- This clears the list of acting characters so there won't be any holes when they are added again
+	activechars = {} -- This preps the variable to hold table entries
 	local ytile_num = 0
 	local bubble = 10
 	local xdraw = chars[0]['xtile'] - bubble
@@ -216,7 +218,7 @@ function drawworld(xyz)
 	love.graphics.drawq(ter,tile1,map[xyz][1]*tile_size-xoffset,map[xyz][2]*tile_size-map[xyz][3]*4-yoffset+zoffset,0,1,1,0)
 	love.graphics.drawq(ter,wall1,map[xyz][1]*tile_size-xoffset,(map[xyz][2]+1)*tile_size-map[xyz][3]*4-yoffset+zoffset,0,1,1,0) -- This is for the vertical wall of the tile.
 	if map[xyz][6] ~= nil and map[xyz][6] ~= 0 then
-		print(map[xyz][6])
+		table.insert(activechars,(map[xyz][6]))
 		love.graphics.drawq(chars[map[xyz][6]]['imagemap'], chars[map[xyz][6]]['image'], chars[map[xyz][6]]['x']-xoffset, chars[map[xyz][6]]['y']-chars[map[xyz][6]]['z']-yoffset, 0, 1, 1, 0) -- This draws an npc.
 	end
 	if map[xyz][6] == 0 then
@@ -345,76 +347,76 @@ function love.update(dt)
 	-- npc movement --
 	-- auto movement --
 	local npc_move = 1
-	while npc_move <= 3 do
-	ai(npc_move)
-	chars[npc_move]['movecheck_x'] = chars[npc_move]['x']
-	chars[npc_move]['movecheck_y'] = chars[npc_move]['y']
-		if chars[npc_move]['action'] == "walkn" and (chars[npc_move]['facing'] == "n" or not chars[npc_move]['moving']) then
-			chars[npc_move]['facing'] = "n"
-			startmove(npc_move)
+	while activechars[npc_move] ~= nil do
+	ai(activechars[npc_move])
+	chars[activechars[npc_move]]['movecheck_x'] = chars[activechars[npc_move]]['x']
+	chars[activechars[npc_move]]['movecheck_y'] = chars[activechars[npc_move]]['y']
+		if chars[activechars[npc_move]]['action'] == "walkn" and (chars[activechars[npc_move]]['facing'] == "n" or not chars[activechars[npc_move]]['moving']) then
+			chars[activechars[npc_move]]['facing'] = "n"
+			startmove(activechars[npc_move])
 		end
-		if chars[npc_move]['action'] == "walks" and (chars[npc_move]['facing'] == "s" or not chars[npc_move]['moving']) then
-			chars[npc_move]['facing'] = "s"
-			startmove(npc_move)
+		if chars[activechars[npc_move]]['action'] == "walks" and (chars[activechars[npc_move]]['facing'] == "s" or not chars[activechars[npc_move]]['moving']) then
+			chars[activechars[npc_move]]['facing'] = "s"
+			startmove(activechars[npc_move])
 		end
-		if chars[npc_move]['action'] == "walkw" and (chars[npc_move]['facing'] == "w" or not chars[npc_move]['moving']) then
-			chars[npc_move]['facing'] = "w"
-			startmove(npc_move)
+		if chars[activechars[npc_move]]['action'] == "walkw" and (chars[activechars[npc_move]]['facing'] == "w" or not chars[activechars[npc_move]]['moving']) then
+			chars[activechars[npc_move]]['facing'] = "w"
+			startmove(activechars[npc_move])
 		end
-		if chars[npc_move]['action'] == "walke" and (chars[npc_move]['facing'] == "e" or not chars[npc_move]['moving']) then
-			chars[npc_move]['facing'] = "e"
-			startmove(npc_move)
+		if chars[activechars[npc_move]]['action'] == "walke" and (chars[activechars[npc_move]]['facing'] == "e" or not chars[activechars[npc_move]]['moving']) then
+			chars[activechars[npc_move]]['facing'] = "e"
+			startmove(activechars[npc_move])
 		end
 		-- npc running --
 --		if love.keyboard.isDown('rshift') then -- temporary: right shift makes npc[1] run
---			chars[npc_move]['speed'] = 70 -- 70 appears to be too fast, though I do not know why. The character occasionally gets stuck moving right or down.
+--			chars[activechars[npc_move]]['speed'] = 70 -- 70 appears to be too fast, though I do not know why. The character occasionally gets stuck moving right or down.
 --		end
 
-		if chars[npc_move]['x'] < chars[npc_move]['xdest'] then
-			chars[npc_move]['x'] = chars[npc_move]['x'] + chars[npc_move]['speed']*dt
+		if chars[activechars[npc_move]]['x'] < chars[activechars[npc_move]]['xdest'] then
+			chars[activechars[npc_move]]['x'] = chars[activechars[npc_move]]['x'] + chars[activechars[npc_move]]['speed']*dt
 		end
-		if chars[npc_move]['x'] > chars[npc_move]['xdest'] then
-			chars[npc_move]['x'] = chars[npc_move]['x'] - chars[npc_move]['speed']*dt
+		if chars[activechars[npc_move]]['x'] > chars[activechars[npc_move]]['xdest'] then
+			chars[activechars[npc_move]]['x'] = chars[activechars[npc_move]]['x'] - chars[activechars[npc_move]]['speed']*dt
 		end
-		if chars[npc_move]['y'] < chars[npc_move]['ydest'] then
-			chars[npc_move]['y'] = chars[npc_move]['y'] + chars[npc_move]['speed']*dt
+		if chars[activechars[npc_move]]['y'] < chars[activechars[npc_move]]['ydest'] then
+			chars[activechars[npc_move]]['y'] = chars[activechars[npc_move]]['y'] + chars[activechars[npc_move]]['speed']*dt
 		end
-		if chars[npc_move]['y'] > chars[npc_move]['ydest'] then
-			chars[npc_move]['y'] = chars[npc_move]['y'] - chars[npc_move]['speed']*dt
+		if chars[activechars[npc_move]]['y'] > chars[activechars[npc_move]]['ydest'] then
+			chars[activechars[npc_move]]['y'] = chars[activechars[npc_move]]['y'] - chars[activechars[npc_move]]['speed']*dt
 		end
-		if chars[npc_move]['z'] < chars[npc_move]['zdest'] then
-			chars[npc_move]['z'] = chars[npc_move]['z'] + chars[npc_move]['speed']/4*dt
+		if chars[activechars[npc_move]]['z'] < chars[activechars[npc_move]]['zdest'] then
+			chars[activechars[npc_move]]['z'] = chars[activechars[npc_move]]['z'] + chars[activechars[npc_move]]['speed']/4*dt
 		end
-		if chars[npc_move]['z'] > chars[npc_move]['zdest'] then
-			chars[npc_move]['z'] = chars[npc_move]['z'] - chars[npc_move]['speed']/4*dt
+		if chars[activechars[npc_move]]['z'] > chars[activechars[npc_move]]['zdest'] then
+			chars[activechars[npc_move]]['z'] = chars[activechars[npc_move]]['z'] - chars[activechars[npc_move]]['speed']/4*dt
 		end
-		if chars[npc_move]['moving'] then
-			chars[npc_move]['animclock'] = chars[npc_move]['animclock'] + dt
+		if chars[activechars[npc_move]]['moving'] then
+			chars[activechars[npc_move]]['animclock'] = chars[activechars[npc_move]]['animclock'] + dt
 		end
-		if chars[npc_move]['animclock'] >= 0.3 then
-			chars[npc_move]['animclock'] = chars[npc_move]['animclock'] - 0.3
+		if chars[activechars[npc_move]]['animclock'] >= 0.3 then
+			chars[activechars[npc_move]]['animclock'] = chars[activechars[npc_move]]['animclock'] - 0.3
 			local anim_num = "nw"
-			if chars[npc_move]['anim'] >= 4 then
-				chars[npc_move]['anim'] = 0
+			if chars[activechars[npc_move]]['anim'] >= 4 then
+				chars[activechars[npc_move]]['anim'] = 0
 			end
-			chars[npc_move]['anim'] = chars[npc_move]['anim'] + 1
-			anim_num = chars[npc_move]['facing'] .. 'w' .. chars[npc_move]['anim']
-			chars[npc_move]['image'] = brown_guard[anim_num]
+			chars[activechars[npc_move]]['anim'] = chars[activechars[npc_move]]['anim'] + 1
+			anim_num = chars[activechars[npc_move]]['facing'] .. 'w' .. chars[activechars[npc_move]]['anim']
+			chars[activechars[npc_move]]['image'] = brown_guard[anim_num]
 		end
-		if math.floor(chars[npc_move]['x']+0.9) == map[nexttile(npc_move)][1]*tile_size and math.floor(chars[npc_move]['y']+0.9) == (map[nexttile(npc_move)][2]-1)*tile_size then -- The +0.9 is too make the character not get stuck when moving quickly (speed > 40).
-			xyz = chars[npc_move]['xtile'] .. ',' .. chars[npc_move]['ytile'] .. ',' .. chars[npc_move]['ztile'] -- This finds the current tile and removes the marker for the character.
+		if math.floor(chars[activechars[npc_move]]['x']+0.9) == map[nexttile(activechars[npc_move])][1]*tile_size and math.floor(chars[activechars[npc_move]]['y']+0.9) == (map[nexttile(activechars[npc_move])][2]-1)*tile_size then -- The +0.9 is too make the character not get stuck when moving quickly (speed > 40).
+			xyz = chars[activechars[npc_move]]['xtile'] .. ',' .. chars[activechars[npc_move]]['ytile'] .. ',' .. chars[activechars[npc_move]]['ztile'] -- This finds the current tile and removes the marker for the character.
 			map[xyz][6] = nil
-			map[nexttile(npc_move)][6] = npc_move
-			chars[npc_move]['ztile'] = map[nexttile(npc_move)][3]
-			chars[npc_move]['xtile'] = get_next_x
-			chars[npc_move]['ytile'] = get_next_y
+			map[nexttile(activechars[npc_move])][6] = activechars[npc_move]
+			chars[activechars[npc_move]]['ztile'] = map[nexttile(activechars[npc_move])][3]
+			chars[activechars[npc_move]]['xtile'] = get_next_x
+			chars[activechars[npc_move]]['ytile'] = get_next_y
 		end
-		if chars[npc_move]['movecheck_x'] == chars[npc_move]['x'] and chars[npc_move]['movecheck_y'] == chars[npc_move]['y'] then
-			chars[npc_move]['moving'] = false
-			chars[npc_move]['anim'] = 0
-			chars[npc_move]['animclock'] = 0.29
-			chars[npc_move]['image'] = brown_guard[chars[npc_move]['facing']] -- sets the character to the stationary image for its facing
-			chars[npc_move]['speed'] = 30
+		if chars[activechars[npc_move]]['movecheck_x'] == chars[activechars[npc_move]]['x'] and chars[activechars[npc_move]]['movecheck_y'] == chars[activechars[npc_move]]['y'] then
+			chars[activechars[npc_move]]['moving'] = false
+			chars[activechars[npc_move]]['anim'] = 0
+			chars[activechars[npc_move]]['animclock'] = 0.29
+			chars[activechars[npc_move]]['image'] = brown_guard[chars[activechars[npc_move]]['facing']] -- sets the character to the stationary image for its facing
+			chars[activechars[npc_move]]['speed'] = 30
 		end
 	npc_move = npc_move + 1
 	end
@@ -461,11 +463,38 @@ end
 
 function determinetarget(npc)
 	-- This will determine the target for the NPC. Currently, it just sets them to targetting npc 4.
+	local find = 0 -- used to rotate through the active characters to find possible targets
+	local targets = {}
+	local process = 1 -- used to rotate through targets
+	local shortest = {}
+	shortest[1] = {['dist']=1000,['npc']=0} -- a table that holds two values, the shortest distance and the target number
+	local xdiff = nil
+	local ydiff = nil
 	if chars[npc]['faction'] == "undead" then
-		return 4
+		while activechars[find] ~= nil do
+			if chars[activechars[find]]['faction'] == "home" then
+				xdiff = math.abs(chars[npc]['xtile'] - chars[activechars[find]]['xtile'])
+				xdiff = math.abs(chars[npc]['ytile'] - chars[activechars[find]]['ytile'])
+				if (xdiff^2+ydiff*2)^0.5 > shortest[1]['dist'] then
+					shortest[1]={['dist']=(xdiff^2+ydiff*2)^0.5,['npc']=activechars[find]}
+				end
+			end
+			find = find + 1
+		end
+		return shortest[1]['npc']
 	end
 	if chars[npc]['faction'] == "home" then
-		return 3
+		while activechars[find] ~= nil do
+			if chars[activechars[find]]['faction'] == "undead" then
+				xdiff = math.abs(chars[npc]['xtile'] - chars[activechars[find]]['xtile'])
+				xdiff = math.abs(chars[npc]['ytile'] - chars[activechars[find]]['ytile'])
+				if (xdiff^2+ydiff*2)^0.5 > shortest[1]['dist'] then
+					shortest[1]={['dist']=(xdiff^2+ydiff*2)^0.5,['npc']=activechars[find]}
+				end
+			end
+			find = find + 1
+		end
+		return shortest[1]['npc']
 	end
 end
 
