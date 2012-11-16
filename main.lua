@@ -431,10 +431,10 @@ function startmove(npc)
 		chars[npc]['ydest'] = (map[nexttile(npc)][2]-1)*tile_size
 		chars[npc]['zdest'] = map[nexttile(npc)][3]*tile_size/4
 		chars[npc]['moving'] = true
-		if chars[npc]['facing'] == 's' or chars[npc]['facing'] == 'e' then -- This draws them ahead, in the direction that gets drawn next. Going the other two directions isn't a problem.
+		--if chars[npc]['facing'] == 's' or chars[npc]['facing'] == 'e' then -- This draws them ahead, in the direction that gets drawn next. Going the other two directions isn't a problem.
 			map[nexttile(npc)][6] = npc
-			map[xyz][6] = nil
-		end
+--			map[xyz][6] = nil
+		--end
 	end
 end
 
@@ -442,44 +442,55 @@ function ai(npc)
 	chars[npc]['action'] = "stationary"
 	local xdiff = nil
 	local ydiff = nil
-	xdiff = chars[npc]['xtile'] - chars[determinetarget(npc)]['xtile']
-	ydiff = chars[npc]['ytile'] - chars[determinetarget(npc)]['ytile']
-	if math.abs(ydiff) >= math.abs(xdiff) then
-		if 0 > ydiff then
-			chars[npc]['action'] = "walks"
-		end
-		if 0 < ydiff then
-			chars[npc]['action'] = "walkn"
-		end
-	else --if math.abs(ydiff) <= math.abs(xdiff) then
-		if 0 > xdiff then
-			chars[npc]['action'] = "walke"
-		end
-		if 0 < xdiff then
-			chars[npc]['action'] = "walkw"
+	if determinetarget(npc) == -1 then
+		chars[npc]['action'] = "stationary"
+	else
+		xdiff = chars[npc]['xtile'] - chars[determinetarget(npc)]['xtile']
+		ydiff = chars[npc]['ytile'] - chars[determinetarget(npc)]['ytile']
+		if math.abs(ydiff) >= math.abs(xdiff) then
+			if 0 > ydiff then
+				chars[npc]['action'] = "walks"
+			end
+			if 0 < ydiff then
+				chars[npc]['action'] = "walkn"
+			end
+		else --if math.abs(ydiff) <= math.abs(xdiff) then
+			if 0 > xdiff then
+				chars[npc]['action'] = "walke"
+			end
+			if 0 < xdiff then
+				chars[npc]['action'] = "walkw"
+			end
 		end
 	end
 end
 
 function determinetarget(npc)
 	-- This will determine the target for the NPC. Currently, it just sets them to targetting npc 4.
-	local find = 0 -- used to rotate through the active characters to find possible targets
+	local find = 1 -- used to rotate through the active characters to find possible targets
 	local targets = {}
 	local process = 1 -- used to rotate through targets
 	local shortest = {}
-	shortest[1] = {['dist']=1000,['npc']=0} -- a table that holds two values, the shortest distance and the target number
+	shortest[1] = {['dist']=10000,['npc']=-1} -- a table that holds two values, the shortest distance and the target number
 	local xdiff = nil
 	local ydiff = nil
 	if chars[npc]['faction'] == "undead" then
 		while activechars[find] ~= nil do
 			if chars[activechars[find]]['faction'] == "home" then
 				xdiff = math.abs(chars[npc]['xtile'] - chars[activechars[find]]['xtile'])
-				xdiff = math.abs(chars[npc]['ytile'] - chars[activechars[find]]['ytile'])
-				if (xdiff^2+ydiff*2)^0.5 > shortest[1]['dist'] then
+				ydiff = math.abs(chars[npc]['ytile'] - chars[activechars[find]]['ytile'])
+				if (xdiff^2+ydiff^2)^0.5 < shortest[1]['dist'] then
 					shortest[1]={['dist']=(xdiff^2+ydiff*2)^0.5,['npc']=activechars[find]}
 				end
 			end
 			find = find + 1
+			-- This section is only needed for factions that will target the main character
+			xdiff = math.abs(chars[npc]['xtile'] - chars[0]['xtile'])
+			ydiff = math.abs(chars[npc]['ytile'] - chars[0]['ytile'])
+			if (xdiff^2+ydiff^2)^0.5 < shortest[1]['dist'] then
+				shortest[1]={['dist']=(xdiff^2+ydiff*2)^0.5,['npc']=0}
+			end
+			-- end of section
 		end
 		return shortest[1]['npc']
 	end
@@ -487,8 +498,8 @@ function determinetarget(npc)
 		while activechars[find] ~= nil do
 			if chars[activechars[find]]['faction'] == "undead" then
 				xdiff = math.abs(chars[npc]['xtile'] - chars[activechars[find]]['xtile'])
-				xdiff = math.abs(chars[npc]['ytile'] - chars[activechars[find]]['ytile'])
-				if (xdiff^2+ydiff*2)^0.5 > shortest[1]['dist'] then
+				ydiff = math.abs(chars[npc]['ytile'] - chars[activechars[find]]['ytile'])
+				if (xdiff^2+ydiff^2)^0.5 < shortest[1]['dist'] then
 					shortest[1]={['dist']=(xdiff^2+ydiff*2)^0.5,['npc']=activechars[find]}
 				end
 			end
@@ -518,6 +529,9 @@ function love.keypressed(key, unicode)
 		--map[nexttile(0)] = {load_map[map[nexttile(0)][5]][1], load_map[map[nexttile(0)][5]][2], load_map[map[nexttile(0)][5]][3], load_map[map[nexttile(0)][5]][4], map[nexttile(0)][5]} -- create the new map
 		--map[nexttile(0)] = nil -- erase the old map tile
 	end
+	if key == 'e' then
+		erasenpc(determinetarget(0))
+	end
 	if key == '`' then -- This is to show the extra attributes
 		if show_menu == false then
 			show_menu = true
@@ -525,6 +539,41 @@ function love.keypressed(key, unicode)
 			show_menu = false
 		end
 	end
+end
+
+function erasenpc(npc)
+	local bubble = 10
+	local xdraw = chars[0]['xtile'] - bubble
+	local ydraw = chars[0]['ytile'] - bubble
+	local zdraw = chars[0]['ztile'] - bubble
+	local xdrawend = chars[0]['xtile'] + bubble
+	local ydrawend = chars[0]['ytile'] + bubble
+	local zdrawend = chars[0]['ztile'] + bubble -- This defines the ceiling 
+	local xyz = nil -- This variable is used to concotinate the numbers for lua to understand the draw variables run together. This value is overwritten.
+	while ydraw <= ydrawend do
+		while xdraw <= xdrawend do
+			while zdraw <= zdrawend do
+				xyz = xdraw .. ',' .. ydraw .. ',' .. zdraw
+				if map[xyz] ~= nil then
+					if map[xyz][6] == npc then
+						map[xyz][6] = nil
+					end
+				end
+				zdraw = zdraw + 1
+			end
+			zdraw = 0
+			xdraw = xdraw + 1
+		end
+		xdraw = chars[0]['xtile'] - bubble -- if the xdraw - value is changed this will need to be made to be the same.
+		ydraw = ydraw + 1
+	end
+	--local removeactive = 1
+	--while activechars[removeactive] ~= removenpc do
+	--	removeactive = removeactive + 1
+	--end
+	activechars = nil
+	activechars = {}
+	chars[npc] = nil
 end
 
 function menu(action)
@@ -665,10 +714,8 @@ function createnpc(xtile,ytile,ztile,facing,imagemap,image,faction)
 --['equipped']=nil			This is the index velue for the item the character has equipped from their inventory
 --['goal']=nil				This is the ai's goal/objective
 --['action']=nil			This is the action the ai is taking towards the goal
-	table.insert(chars,{['x']=nil,['y']=nil,['z']=nil,['xtile']=xtile,['ytile']=ytile,['ztile']=ztile,['facing']=facing,['moving']=false,['speed']=35,['imagemap']=imagemap,['image']=image,['anim']=0,['animclock']=0.29,['movecheck_x']=nil,['movecheck_y']=nil,['faction']="undead",['inventindex']=nil,['equipped']=nil,['goal']=nil,['action']=nil}) -- This should eventually be loaded from a file.
+	table.insert(chars,{['x']=nil,['y']=nil,['z']=nil,['xtile']=xtile,['ytile']=ytile,['ztile']=ztile,['facing']=facing,['moving']=false,['speed']=35,['imagemap']=imagemap,['image']=image,['anim']=0,['animclock']=0.29,['movecheck_x']=nil,['movecheck_y']=nil,['faction']=faction,['inventindex']=nil,['equipped']=nil,['goal']=nil,['action']=nil}) -- This should eventually be loaded from a file.
 
-
---	table.insert(chars,{['x']=400,['y']=96,['z']=4,['xtile']=25,['ytile']=6,['ztile']=1,['xdest']=400,['ydest']=96,['zdest']=4,['xtarget']=nil,['ytarget']=nil,['ztarget']=nil,['facing']="s",['moving']=false,['speed']=35,['imagemap']=img,['image']=brown_guard['s'],['anim']=0,['animclock']=0.29,['movecheck_x']=nil,['movecheck_y']=nil,['faction']="home",['inventindex']=nil,['equipped']=nil,['goal']=nil,['action']=nil})
 	
 	chars[load_npc]['x'] = chars[load_npc]['xtile']*tile_size
 	chars[load_npc]['y'] = (chars[load_npc]['ytile']-1)*tile_size
